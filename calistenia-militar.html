@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#0d0d0d">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<title>CALISTENIA MILITAR</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Share+Tech+Mono&family=Barlow+Condensed:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; user-select:none; }
+:root {
+  --bg:#0d0d0d; --bg2:#151515; --bg3:#1e1e1e;
+  --olive:#3d4f22; --olive2:#5a7032; --olive3:#7a9445;
+  --amber:#c17f24; --amber2:#e09c2e; --amber3:#f5b942;
+  --rest:#1a4a5c; --rest2:#2a7a9c; --rest3:#3aaecf;
+  --text:#ccc4b0; --text2:#8a8070; --text3:#554e42;
+  --l1:#2a6b3c; --l1b:#3a9b55;
+  --l2:#7a4a0a; --l2b:#c07820;
+  --skip:#5c2a0a; --skipb:#c04010; --skipl:#ff6030;
+}
+html,body { height:100%; overflow:hidden; background:var(--bg); font-family:'Barlow Condensed',sans-serif; color:var(--text); }
+.screen { display:none; flex-direction:column; height:100vh; }
+.screen.active { display:flex; }
+
+/* ── HOME ── */
+#home { background:var(--bg); position:relative; overflow:hidden; }
+.home-grid { position:absolute; inset:0; background-image:linear-gradient(rgba(61,79,34,0.07) 1px,transparent 1px),linear-gradient(90deg,rgba(61,79,34,0.07) 1px,transparent 1px); background-size:40px 40px; }
+.home-topbar { position:relative; z-index:2; display:flex; justify-content:space-between; align-items:center; padding:12px 20px; border-bottom:1px solid rgba(61,79,34,0.4); }
+.top-tag { font-family:'Share Tech Mono',monospace; font-size:9px; letter-spacing:3px; color:var(--amber); opacity:0.7; }
+.home-body { flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; position:relative; z-index:2; padding:16px 20px; gap:0; }
+.app-title { font-family:'Bebas Neue',sans-serif; font-size:64px; letter-spacing:8px; line-height:0.9; text-align:center; color:var(--text); }
+.app-title span { display:block; font-size:22px; letter-spacing:14px; color:var(--amber2); margin-top:6px; }
+.divider { width:60px; height:2px; background:linear-gradient(90deg,transparent,var(--amber),transparent); margin:16px 0; }
+.level-selector { width:100%; max-width:340px; display:flex; flex-direction:column; gap:10px; margin-bottom:20px; }
+.level-card { border:1px solid; padding:14px 18px; cursor:pointer; display:flex; align-items:center; justify-content:space-between; transition:all 0.2s; clip-path:polygon(6px 0%,100% 0%,calc(100% - 6px) 100%,0% 100%); }
+.level-card:active { transform:scale(0.98); }
+.level-card.selected { border-width:2px; }
+.level-card.lv1 { border-color:var(--l1); background:rgba(42,107,60,0.08); }
+.level-card.lv1.selected { border-color:var(--l1b); background:rgba(42,107,60,0.18); }
+.level-card.lv2 { border-color:var(--l2); background:rgba(122,74,10,0.08); }
+.level-card.lv2.selected { border-color:var(--l2b); background:rgba(122,74,10,0.18); }
+.level-badge { font-family:'Share Tech Mono',monospace; font-size:9px; letter-spacing:2px; padding:3px 8px; border:1px solid; }
+.lv1 .level-badge { color:var(--l1b); border-color:var(--l1); }
+.lv2 .level-badge { color:var(--l2b); border-color:var(--l2); }
+.level-info { flex:1; padding:0 12px; }
+.level-name { font-family:'Bebas Neue',sans-serif; font-size:19px; letter-spacing:2px; color:var(--text); }
+.level-desc { font-size:11px; color:var(--text2); letter-spacing:1px; margin-top:2px; }
+.level-stats .ls-v { font-family:'Bebas Neue',sans-serif; font-size:24px; color:var(--amber2); text-align:right; }
+.level-stats .ls-l { font-size:9px; letter-spacing:1px; color:var(--text3); text-align:right; }
+.btn-start { background:var(--olive); border:2px solid var(--olive3); color:var(--amber3); font-family:'Bebas Neue',sans-serif; font-size:26px; letter-spacing:6px; padding:16px 56px; cursor:pointer; clip-path:polygon(8px 0%,100% 0%,calc(100% - 8px) 100%,0% 100%); transition:all 0.15s; }
+.btn-start:active { transform:scale(0.97); }
+.btn-text { font-family:'Share Tech Mono',monospace; font-size:10px; letter-spacing:2px; color:var(--text3); background:none; border:1px solid var(--bg3); padding:7px 14px; cursor:pointer; margin-top:12px; }
+.btn-text:active { color:var(--text2); }
+
+/* ── COUNTDOWN ── */
+.countdown-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.92); z-index:300; flex-direction:column; align-items:center; justify-content:center; gap:12px; }
+.countdown-overlay.active { display:flex; }
+.cd-num { font-family:'Bebas Neue',sans-serif; font-size:150px; color:var(--amber3); line-height:1; animation:cdpop 1s ease-out; }
+@keyframes cdpop { 0%{transform:scale(1.5);opacity:0} 40%{opacity:1} 100%{transform:scale(1);opacity:1} }
+.cd-label { font-family:'Share Tech Mono',monospace; font-size:11px; letter-spacing:6px; color:var(--text2); }
+
+/* ── WORKOUT ── */
+#workout { background:var(--bg); position:relative; overflow:hidden; }
+.phase-bg { position:absolute; inset:0; opacity:0; transition:opacity 0.4s; pointer-events:none; }
+.phase-bg.exercise { background:radial-gradient(ellipse at 50% 40%,rgba(61,79,34,0.14) 0%,transparent 70%); }
+.phase-bg.rest { background:radial-gradient(ellipse at 50% 40%,rgba(26,74,92,0.2) 0%,transparent 70%); }
+.phase-bg.on { opacity:1; }
+.w-topbar { position:relative; z-index:2; display:flex; justify-content:space-between; align-items:center; padding:10px 16px; border-bottom:1px solid var(--bg3); }
+.btn-back { font-family:'Share Tech Mono',monospace; font-size:10px; letter-spacing:2px; color:var(--text2); background:none; border:1px solid var(--bg3); padding:5px 10px; cursor:pointer; }
+.btn-back:active { color:var(--text); }
+.ex-counter { font-family:'Bebas Neue',sans-serif; font-size:17px; letter-spacing:3px; color:var(--text2); }
+.ex-counter span { color:var(--amber2); }
+.level-indicator { font-family:'Share Tech Mono',monospace; font-size:9px; letter-spacing:2px; padding:4px 8px; border:1px solid; }
+.level-indicator.lv1 { color:var(--l1b); border-color:var(--l1); }
+.level-indicator.lv2 { color:var(--l2b); border-color:var(--l2); }
+.progress-track { position:relative; z-index:2; height:3px; background:var(--bg3); }
+.progress-fill { height:100%; background:linear-gradient(90deg,var(--olive2),var(--amber2)); transition:width 0.5s ease; }
+
+/* Main workout */
+.w-main { flex:1; display:flex; flex-direction:column; align-items:center; justify-content:space-between; padding:10px 16px 10px; position:relative; z-index:2; }
+
+.phase-tag { font-family:'Share Tech Mono',monospace; font-size:11px; letter-spacing:5px; padding:4px 16px; border:1px solid; transition:all 0.3s; }
+.phase-tag.exercise { color:var(--olive3); border-color:var(--olive3); background:rgba(61,79,34,0.15); }
+.phase-tag.rest { color:var(--rest3); border-color:var(--rest2); background:rgba(26,74,92,0.18); }
+
+.ex-name { text-align:center; padding:0 8px; }
+.ex-name h2 { font-family:'Bebas Neue',sans-serif; font-size:clamp(22px,6vw,40px); letter-spacing:2px; line-height:1.05; color:var(--text); }
+.side-tag { font-family:'Bebas Neue',sans-serif; font-size:12px; letter-spacing:4px; padding:2px 10px; margin-top:3px; background:rgba(193,127,36,0.15); border:1px solid var(--amber); color:var(--amber2); display:none; }
+.side-tag.visible { display:inline-block; }
+
+/* Ring row */
+.ring-row { display:flex; align-items:center; justify-content:center; gap:10px; width:100%; }
+
+/* Botón PAUSA — grande, color neutro */
+.btn-pause {
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  width:72px; height:80px; cursor:pointer;
+  border:1px solid var(--bg3); background:var(--bg2);
+  gap:5px; transition:all 0.15s; flex-shrink:0;
+}
+.btn-pause:active { background:var(--bg3); transform:scale(0.95); }
+.btn-pause .bp-icon { font-size:26px; line-height:1; }
+.btn-pause .bp-label { font-family:'Share Tech Mono',monospace; font-size:8px; letter-spacing:1px; color:var(--text2); }
+
+/* Botón SKIP — grande, color naranja/rojo que destaca */
+.btn-skip {
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  width:72px; height:80px; cursor:pointer;
+  border:1px solid var(--skipb); background:rgba(92,42,10,0.3);
+  gap:5px; transition:all 0.15s; flex-shrink:0;
+}
+.btn-skip:active { background:rgba(92,42,10,0.6); transform:scale(0.95); }
+.btn-skip .bs-icon { font-size:26px; line-height:1; color:var(--skipl); }
+.btn-skip .bs-label { font-family:'Share Tech Mono',monospace; font-size:8px; letter-spacing:1px; color:var(--skipb); }
+
+/* Anillo */
+.ring-wrap { position:relative; width:158px; height:158px; flex-shrink:0; }
+.ring-wrap svg { transform:rotate(-90deg); position:absolute; inset:0; }
+.ring-bg { fill:none; stroke:var(--bg3); stroke-width:7; }
+.ring-fill { fill:none; stroke-width:7; stroke-linecap:butt; transition:stroke-dashoffset 0.9s linear, stroke 0.3s; }
+.ring-fill.exercise { stroke:var(--olive3); }
+.ring-fill.rest { stroke:var(--rest3); }
+.timer-inner { position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; }
+.t-num { font-family:'Bebas Neue',sans-serif; font-size:66px; line-height:1; transition:color 0.3s; }
+.t-num.exercise { color:var(--amber3); }
+.t-num.rest { color:var(--rest3); }
+.t-num.urgent { color:#c0392b; animation:urg 0.45s infinite alternate; }
+@keyframes urg { from{opacity:1} to{opacity:0.5} }
+.t-unit { font-family:'Share Tech Mono',monospace; font-size:9px; letter-spacing:4px; color:var(--text3); margin-top:-4px; }
+
+/* Panel pausa */
+.pause-panel { background:rgba(193,127,36,0.08); border:1px solid rgba(193,127,36,0.3); padding:8px 14px; width:100%; max-width:300px; text-align:center; transition:opacity 0.2s; }
+.pause-panel.hidden { opacity:0; pointer-events:none; }
+.pause-panel .pp-label { font-family:'Share Tech Mono',monospace; font-size:8px; letter-spacing:3px; color:var(--text3); margin-bottom:4px; }
+.pause-panel .pp-next { font-family:'Bebas Neue',sans-serif; font-size:18px; letter-spacing:2px; color:var(--amber2); line-height:1.1; }
+.pause-panel .pp-side { font-size:11px; letter-spacing:2px; color:var(--olive3); margin-top:2px; min-height:14px; }
+.pause-panel .pp-paused { font-family:'Share Tech Mono',monospace; font-size:9px; letter-spacing:3px; color:var(--rest3); margin-top:4px; display:none; }
+.pause-panel .pp-paused.visible { display:block; }
+
+/* Dots */
+.dots-row { display:flex; gap:5px; flex-wrap:wrap; justify-content:center; max-width:280px; }
+.dot { width:9px; height:9px; border-radius:1px; background:var(--bg3); border:1px solid var(--bg3); transition:all 0.3s; }
+.dot.done { background:var(--olive3); border-color:var(--olive3); }
+.dot.curr { background:var(--amber2); border-color:var(--amber3); box-shadow:0 0 6px var(--amber3); }
+
+/* ── DONE ── */
+#done { background:var(--bg); align-items:center; justify-content:center; gap:14px; padding:40px 24px; text-align:center; }
+.done-icon { font-size:60px; }
+.done-title { font-family:'Bebas Neue',sans-serif; font-size:56px; letter-spacing:6px; color:var(--amber3); line-height:1; }
+.done-sub { font-size:14px; letter-spacing:3px; color:var(--text2); text-transform:uppercase; }
+.done-stats { display:flex; gap:48px; margin:6px 0; }
+.done-stat .v { font-family:'Bebas Neue',sans-serif; font-size:42px; color:var(--olive3); }
+.done-stat .l { font-size:10px; letter-spacing:2px; color:var(--text3); }
+.btn-again { background:var(--olive); border:2px solid var(--olive3); color:var(--amber3); font-family:'Bebas Neue',sans-serif; font-size:22px; letter-spacing:5px; padding:14px 44px; cursor:pointer; clip-path:polygon(8px 0%,100% 0%,calc(100% - 8px) 100%,0% 100%); }
+.btn-again:active { transform:scale(0.97); }
+
+/* ── MODAL ── */
+.modal { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.9); z-index:500; flex-direction:column; }
+.modal.active { display:flex; }
+.modal-hdr { display:flex; justify-content:space-between; align-items:center; padding:14px 20px; border-bottom:1px solid var(--olive); background:var(--bg2); }
+.modal-title { font-family:'Bebas Neue',sans-serif; font-size:22px; letter-spacing:4px; color:var(--amber2); }
+.btn-x { font-size:20px; color:var(--text2); background:none; border:none; cursor:pointer; padding:4px 8px; }
+.modal-body { flex:1; overflow-y:auto; padding:20px; -webkit-overflow-scrolling:touch; }
+.modal-tabs { display:flex; gap:8px; margin-bottom:18px; }
+.tab-btn { flex:1; font-family:'Bebas Neue',sans-serif; font-size:16px; letter-spacing:2px; padding:10px; border:1px solid var(--bg3); background:var(--bg3); color:var(--text2); cursor:pointer; }
+.tab-btn.active.lv1 { border-color:var(--l1b); color:var(--l1b); background:rgba(42,107,60,0.15); }
+.tab-btn.active.lv2 { border-color:var(--l2b); color:var(--l2b); background:rgba(122,74,10,0.15); }
+.howto-ex { margin-bottom:20px; border-left:2px solid var(--olive); padding-left:14px; }
+.howto-num { font-family:'Share Tech Mono',monospace; font-size:9px; letter-spacing:2px; color:var(--amber); margin-bottom:4px; }
+.howto-name { font-family:'Bebas Neue',sans-serif; font-size:19px; letter-spacing:2px; color:var(--text); margin-bottom:5px; }
+.howto-how { font-size:13px; line-height:1.7; color:var(--text2); font-weight:300; }
+.howto-feel { margin-top:5px; font-size:11px; color:var(--olive3); letter-spacing:1px; }
+</style>
+</head>
+<body>
+
+<!-- HOME -->
+<div id="home" class="screen active">
+  <div class="home-grid"></div>
+  <div class="home-topbar">
+    <span class="top-tag">▶ SELECCIONA NIVEL</span>
+    <span class="top-tag">SIN IMPACTO</span>
+  </div>
+  <div class="home-body">
+    <div class="app-title">CALIS<br>TENIA<span>MILITAR</span></div>
+    <div class="divider"></div>
+    <div class="level-selector">
+      <div class="level-card lv1 selected" onclick="selectLevel(1)">
+        <div class="level-badge">NIVEL 1</div>
+        <div class="level-info">
+          <div class="level-name">Protección Total</div>
+          <div class="level-desc">Rodilla · Espalda · Cuello</div>
+        </div>
+        <div class="level-stats"><div class="ls-v">~9'</div><div class="ls-l">min</div></div>
+      </div>
+      <div class="level-card lv2" onclick="selectLevel(2)">
+        <div class="level-badge">NIVEL 2</div>
+        <div class="level-info">
+          <div class="level-name">Intermedio</div>
+          <div class="level-desc">Fuerza · Core · Cardio</div>
+        </div>
+        <div class="level-stats"><div class="ls-v">~9'</div><div class="ls-l">min</div></div>
+      </div>
+    </div>
+    <button class="btn-start" onclick="startCountdown()">INICIAR</button>
+    <button class="btn-text" onclick="openModal()">VER EJERCICIOS</button>
+  </div>
+</div>
+
+<!-- COUNTDOWN -->
+<div class="countdown-overlay" id="cdOverlay">
+  <div class="cd-num" id="cdNum">3</div>
+  <div class="cd-label">PREPÁRATE</div>
+</div>
+
+<!-- WORKOUT -->
+<div id="workout" class="screen">
+  <div class="phase-bg exercise on" id="phaseBg"></div>
+  <div class="w-topbar">
+    <button class="btn-back" onclick="goHome()">← SALIR</button>
+    <div class="ex-counter">EJ <span id="exNum">1</span>/<span id="exTotal">14</span></div>
+    <div class="level-indicator lv1" id="levelInd">NV1</div>
+  </div>
+  <div class="progress-track"><div class="progress-fill" id="progFill" style="width:0%"></div></div>
+
+  <div class="w-main">
+    <div class="phase-tag exercise" id="phaseTag">TRABAJO</div>
+
+    <div class="ex-name">
+      <h2 id="exName">CARGANDO...</h2>
+      <div class="side-tag" id="sideTag"></div>
+    </div>
+
+    <div class="ring-row">
+      <button class="btn-pause" id="btnPause" onclick="togglePause()">
+        <div class="bp-icon" id="pauseIcon">⏸</div>
+        <div class="bp-label" id="pauseLabel">PAUSA</div>
+      </button>
+
+      <div class="ring-wrap">
+        <svg viewBox="0 0 158 158" width="158" height="158">
+          <circle class="ring-bg" cx="79" cy="79" r="72"/>
+          <circle class="ring-fill exercise" id="ringFill" cx="79" cy="79" r="72"
+            stroke-dasharray="452" stroke-dashoffset="0"/>
+        </svg>
+        <div class="timer-inner">
+          <div class="t-num exercise" id="tNum">30</div>
+          <div class="t-unit">SEG</div>
+        </div>
+      </div>
+
+      <button class="btn-skip" onclick="skipPhase()">
+        <div class="bs-icon">▶▶</div>
+        <div class="bs-label">SKIP</div>
+      </button>
+    </div>
+
+    <!-- Siguiente ejercicio — siempre visible -->
+    <div class="pause-panel" id="nextPanel">
+      <div class="pp-label">// SIGUIENTE</div>
+      <div class="pp-next" id="ppNext">—</div>
+      <div class="pp-side" id="ppSide"></div>
+      <div class="pp-paused" id="ppPaused">⏸ EN PAUSA</div>
+    </div>
+
+    <div class="dots-row" id="dotsRow"></div>
+  </div>
+</div>
+
+<!-- DONE -->
+<div id="done" class="screen">
+  <div class="done-icon">🎖️</div>
+  <div class="done-title">MISIÓN<br>CUMPLIDA</div>
+  <div class="done-sub" id="doneSub">Nivel 1 completado</div>
+  <div class="done-stats">
+    <div class="done-stat"><div class="v">14</div><div class="l">Ejercicios</div></div>
+    <div class="done-stat"><div class="v">9</div><div class="l">Minutos</div></div>
+  </div>
+  <button class="btn-again" onclick="startCountdown()">REPETIR</button>
+  <button class="btn-text" style="margin-top:10px;" onclick="goHome()">CAMBIAR NIVEL</button>
+</div>
+
+<!-- MODAL -->
+<div class="modal" id="modal">
+  <div class="modal-hdr">
+    <span class="modal-title">EJERCICIOS</span>
+    <button class="btn-x" onclick="closeModal()">✕</button>
+  </div>
+  <div class="modal-body">
+    <div class="modal-tabs">
+      <button class="tab-btn active lv1" id="tab1" onclick="showModalLevel(1)">NIVEL 1</button>
+      <button class="tab-btn lv2" id="tab2" onclick="showModalLevel(2)">NIVEL 2</button>
+    </div>
+    <div id="modalContent"></div>
+  </div>
+</div>
+
+<script>
+const CIRC = 452;
+const WORK = 30, REST = 10;
+
+const L1 = [
+  { name:"Flexiones Inclinadas Rápidas", short:"Flexiones Inclinadas", how:"Manos en mesa o encimera, cuerpo recto. Baja el pecho y sube rápido.", feel:"Pecho y brazos ardiendo." },
+  { name:"Flexiones Manos Abiertas", short:"Flexiones Abiertas", how:"Manos más separadas. Baja lento, sube fuerte.", feel:"Más pecho, menos tensión en hombros." },
+  { name:"Plancha Toques de Hombro", short:"Plancha Toques", how:"Plancha alta. Toca hombro derecho con mano izquierda y al revés. Core apretado.", feel:"Core trabajando muchísimo." },
+  { name:"Plancha Baja con Avance", short:"Plancha Avance", how:"Antebrazos en el suelo. Mueve el cuerpo adelante y atrás. Abdomen firme.", feel:"Abdomen y hombros temblando." },
+  { name:"Sentadilla Isométrica", short:"Wall Sit", how:"Espalda contra la pared. Rodillas a 90° o más arriba. Mantén.", feel:"Cuádriceps quemando." },
+  { name:"Sentadilla Lenta 5-5-5", short:"Sentadilla Lenta", how:"5s bajando, 5s abajo, 5s subiendo. Control total.", feel:"Tensión máxima en piernas y glúteos." },
+  { name:"Zancada Estática — Pierna Derecha", short:"Zancada Dcha", how:"Pie derecho adelante. Baja hasta donde no moleste. Tensión continua.", feel:"Glúteo y pierna delantera.", side:"PIERNA DERECHA" },
+  { name:"Zancada Estática — Pierna Izquierda", short:"Zancada Izda", how:"Pie izquierdo adelante. Misma tensión continua.", feel:"Glúteo y pierna delantera.", side:"PIERNA IZQUIERDA" },
+  { name:"Puente Glúteos — Pierna Derecha", short:"Puente Dcha", how:"Boca arriba. Pierna derecha apoyada, izquierda extendida. Sube cadera.", feel:"Glúteo ardiendo.", side:"PIERNA DERECHA" },
+  { name:"Puente Glúteos — Pierna Izquierda", short:"Puente Izda", how:"Pierna izquierda apoyada, derecha extendida. Sube cadera.", feel:"Glúteo ardiendo.", side:"PIERNA IZQUIERDA" },
+  { name:"Marcha Militar Explosiva", short:"Marcha Militar", how:"Rodillas altas, brazos fuertes. Ritmo rápido sin saltar.", feel:"Pulso subiendo rápido." },
+  { name:"Shadow Boxing Potente", short:"Shadow Boxing", how:"Golpes rápidos: jab, cross. Torso firme, pies sin saltar.", feel:"Hombros, core y cardio a tope." },
+  { name:"Rodillas Alternas al Pecho", short:"Rodillas al Pecho", how:"Sube una rodilla al pecho, luego la otra. Rápido, sin saltar.", feel:"Abdomen y cardio." },
+  { name:"Skaters sin Salto", short:"Skaters", how:"Paso lateral grande. Mano hacia pie contrario. Sin saltar.", feel:"Piernas, glúteos y cardio." }
+];
+
+const L2 = [
+  { name:"Flexiones Inclinadas Explosivas", short:"Flexiones Explosivas", how:"Baja controlando, sube rápido y potente.", feel:"Pecho, tríceps y explosividad." },
+  { name:"Flexiones Diamante en Mesa", short:"Flexiones Diamante", how:"Manos juntas formando diamante. Baja lento, sube fuerte.", feel:"Tríceps y core a tope." },
+  { name:"Plancha con Desplazamiento Lateral", short:"Plancha Lateral", how:"Plancha alta. Camina con manos y pies a un lado y al otro.", feel:"Core, hombros y estabilidad." },
+  { name:"Plancha Baja + Elevación de Pierna", short:"Plancha + Pierna", how:"Antebrazos en el suelo. Eleva una pierna, luego la otra alternando.", feel:"Abdomen y glúteos a tope." },
+  { name:"Sentadilla Isométrica Profunda", short:"Wall Sit Profundo", how:"Espalda en pared, un poco más abajo. Mantén 30s.", feel:"Cuádriceps quemando más fuerte." },
+  { name:"Sentadilla 3-1-3", short:"Sentadilla 3-1-3", how:"3s bajando, 1s abajo, 3s subiendo. Control absoluto.", feel:"Tensión máxima en piernas y glúteos." },
+  { name:"Zancada Profunda — Pierna Derecha", short:"Zancada Dcha", how:"Pie derecho adelante. Baja más profundo, sin rebote.", feel:"Glúteo y pierna al máximo.", side:"PIERNA DERECHA" },
+  { name:"Zancada Profunda — Pierna Izquierda", short:"Zancada Izda", how:"Pie izquierdo adelante. Misma profundidad, sin rebote.", feel:"Glúteo y pierna al máximo.", side:"PIERNA IZQUIERDA" },
+  { name:"Puente con Pausa — Pierna Derecha", short:"Puente Pausa Dcha", how:"Pierna derecha apoyada. Sube y mantén 2s arriba apretando glúteo.", feel:"Glúteo ardiendo con más intensidad.", side:"PIERNA DERECHA" },
+  { name:"Puente con Pausa — Pierna Izquierda", short:"Puente Pausa Izda", how:"Pierna izquierda apoyada. Sube y mantén 2s arriba.", feel:"Glúteo ardiendo.", side:"PIERNA IZQUIERDA" },
+  { name:"Marcha Militar Muy Explosiva", short:"Marcha Explosiva", how:"Rodillas muy altas, brazos potentes. Ritmo máximo sin saltar.", feel:"Cardio disparado." },
+  { name:"Shadow Boxing con Giros de Torso", short:"Shadow + Giros", how:"Golpes rápidos + giro de torso en cada golpe. Pies firmes.", feel:"Hombros, core y cardio a tope." },
+  { name:"Rodillas al Pecho Rápidas", short:"Rodillas Rápidas", how:"Ritmo máximo alternando rodillas. Sin impacto.", feel:"Abdomen y cardio al límite." },
+  { name:"Skaters Amplios sin Salto", short:"Skaters Amplios", how:"Paso lateral muy amplio. Torso inclinado hacia el pie.", feel:"Piernas, glúteos y cardio alto." }
+];
+
+let selectedLevel = 1;
+let sequence = [];
+let curStep = 0;
+let phase = 'exercise';
+let timeLeft = WORK;
+let ticker = null;
+let paused = false;
+let ac = null;
+
+function selectLevel(n) {
+  selectedLevel = n;
+  document.querySelectorAll('.level-card').forEach((c,i) => c.classList.toggle('selected', i+1===n));
+}
+
+function audio() { if (!ac) ac = new (window.AudioContext || window.webkitAudioContext)(); }
+function beep(freq=880, dur=0.12, vol=0.35) {
+  try {
+    const o = ac.createOscillator(), g = ac.createGain();
+    o.connect(g); g.connect(ac.destination);
+    o.frequency.value = freq; o.type = 'square';
+    g.gain.setValueAtTime(vol, ac.currentTime);
+    g.gain.exponentialRampToValueAtTime(0.001, ac.currentTime + dur);
+    o.start(); o.stop(ac.currentTime + dur);
+  } catch(e) {}
+}
+function bStart() { beep(660,0.1); setTimeout(()=>beep(880,0.15),120); }
+function bRest()  { beep(440,0.2,0.3); }
+function bDone()  { [0,200,400,700].forEach((d,i)=>setTimeout(()=>beep([523,659,784,1047][i],0.25),d)); }
+
+function startCountdown() {
+  audio(); show('home');
+  const ov = document.getElementById('cdOverlay');
+  const nm = document.getElementById('cdNum');
+  ov.classList.add('active');
+  let n = 3; nm.textContent = n; beep(440,0.1);
+  const iv = setInterval(()=>{
+    n--;
+    if (n<=0) { clearInterval(iv); ov.classList.remove('active'); beginWorkout(); }
+    else {
+      nm.textContent = n;
+      nm.style.animation='none'; void nm.offsetWidth; nm.style.animation='cdpop 1s ease-out';
+      beep(440,0.1);
+    }
+  }, 1000);
+}
+
+function beginWorkout() {
+  sequence = selectedLevel===1 ? L1 : L2;
+  curStep=0; phase='exercise'; timeLeft=WORK; paused=false;
+  const li = document.getElementById('levelInd');
+  li.textContent = 'NV'+selectedLevel;
+  li.className = 'level-indicator lv'+selectedLevel;
+  document.getElementById('exTotal').textContent = sequence.length;
+  document.getElementById('doneSub').textContent = 'Nivel '+selectedLevel+' completado';
+  buildDots(); updateUI(); show('workout'); bStart(); tick();
+}
+
+function tick() {
+  clearInterval(ticker);
+  ticker = setInterval(()=>{
+    if (paused) return;
+    timeLeft--;
+    if (timeLeft<=3 && timeLeft>0) beep(600,0.07,0.18);
+    if (timeLeft<=0) { next(); return; }
+    updateTimer();
+  }, 1000);
+}
+
+function next() {
+  if (phase==='exercise') {
+    if (curStep>=sequence.length-1) { clearInterval(ticker); bDone(); show('done'); return; }
+    phase='rest'; timeLeft=REST; bRest();
+  } else {
+    curStep++; phase='exercise'; timeLeft=WORK; bStart();
+  }
+  updateUI(); updateTimer();
+}
+
+function updateUI() {
+  const isW = phase==='exercise';
+  const ex = sequence[curStep];
+
+  document.getElementById('phaseTag').textContent = isW ? 'TRABAJO' : 'DESCANSO';
+  document.getElementById('phaseTag').className = 'phase-tag '+phase;
+  document.getElementById('phaseBg').className = 'phase-bg '+phase+' on';
+  document.getElementById('exName').textContent = isW ? ex.name : '— DESCANSA —';
+  document.getElementById('exNum').textContent = curStep+1;
+
+  const st = document.getElementById('sideTag');
+  if (isW && ex.side) { st.textContent=ex.side; st.className='side-tag visible'; }
+  else { st.className='side-tag'; }
+
+  // Siguiente — siempre visible
+  const ni = phase==='rest' ? curStep+1 : curStep+1;
+  const nextEx = ni < sequence.length ? sequence[ni] : null;
+  if (nextEx) {
+    document.getElementById('ppNext').textContent = nextEx.name;
+    document.getElementById('ppSide').textContent = nextEx.side || '';
+    document.getElementById('nextPanel').classList.remove('hidden');
+  } else {
+    document.getElementById('ppNext').textContent = '¡ÚLTIMO EJERCICIO!';
+    document.getElementById('ppSide').textContent = '';
+  }
+
+  document.getElementById('progFill').style.width = (curStep/sequence.length*100)+'%';
+  document.getElementById('ringFill').className = 'ring-fill '+phase;
+  updateDots();
+  updateTimer();
+}
+
+function updateTimer() {
+  const maxT = phase==='exercise' ? WORK : REST;
+  document.getElementById('ringFill').style.strokeDashoffset = CIRC*(1-timeLeft/maxT);
+  const n = document.getElementById('tNum');
+  n.textContent = timeLeft;
+  n.className = 't-num '+(timeLeft<=3 ? 'urgent' : phase);
+}
+
+function buildDots() {
+  document.getElementById('dotsRow').innerHTML = sequence.map((_,i)=>`<div class="dot" id="d${i}"></div>`).join('');
+}
+function updateDots() {
+  sequence.forEach((_,i)=>{
+    const d=document.getElementById('d'+i);
+    if(d) d.className='dot'+(i<curStep?' done':i===curStep?' curr':'');
+  });
+}
+
+function togglePause() {
+  paused=!paused;
+  document.getElementById('pauseIcon').textContent = paused ? '▶' : '⏸';
+  document.getElementById('pauseLabel').textContent = paused ? 'SEGUIR' : 'PAUSA';
+  document.getElementById('ppPaused').className = 'pp-paused'+(paused?' visible':'');
+}
+
+function skipPhase() { timeLeft=0; next(); }
+function goHome() { clearInterval(ticker); paused=false; show('home'); }
+function show(id) { document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active')); document.getElementById(id).classList.add('active'); }
+
+function openModal() { showModalLevel(selectedLevel); document.getElementById('modal').classList.add('active'); }
+function closeModal() { document.getElementById('modal').classList.remove('active'); }
+function showModalLevel(n) {
+  ['tab1','tab2'].forEach((id,i)=>{
+    document.getElementById(id).className='tab-btn'+(i+1===n?' active lv'+n:'');
+  });
+  const list = n===1 ? L1 : L2;
+  document.getElementById('modalContent').innerHTML = list.map((e,i)=>`
+    <div class="howto-ex">
+      <div class="howto-num">// EJ ${String(i+1).padStart(2,'0')}${e.side?' · '+e.side:''}</div>
+      <div class="howto-name">${e.name}</div>
+      <div class="howto-how">${e.how}</div>
+      <div class="howto-feel">⚡ ${e.feel}</div>
+    </div>`).join('');
+}
+</script>
+</body>
+</html>

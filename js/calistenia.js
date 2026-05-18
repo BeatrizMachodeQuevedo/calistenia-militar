@@ -71,19 +71,45 @@ function nextPh() {
 
 function updUI() {
   const isW = ph === 'exercise', ex = seq[cur];
+
   document.getElementById('phTag').textContent = isW ? 'TRABAJO' : 'DESCANSO';
   document.getElementById('phTag').className = 'ph-tag ' + ph;
   document.getElementById('phBg').className = 'ph-bg ' + ph + ' on';
   document.getElementById('exName').textContent = isW ? ex.name : '— DESCANSA —';
   document.getElementById('exN').textContent = cur + 1;
+
+  // Icono del ejercicio
+  const iconEl = document.getElementById('exIcon');
+  if (isW) {
+    const iconId = getExerciseIcon(ex.name);
+    iconEl.innerHTML = iconId ? icon(iconId, 48) : '';
+    iconEl.style.display = iconId ? 'flex' : 'none';
+  } else {
+    iconEl.innerHTML = '';
+    iconEl.style.display = 'none';
+  }
+
+  // Técnica clave
+  const tecEl = document.getElementById('exTecnica');
+  if (isW && ex.tecnica) {
+    tecEl.textContent = ex.tecnica;
+    tecEl.style.display = 'block';
+  } else {
+    tecEl.textContent = '';
+    tecEl.style.display = 'none';
+  }
+
   const st = document.getElementById('sideTg');
   if (isW && ex.side) { st.textContent = ex.side; st.className = 'side-tag on'; }
   else { st.className = 'side-tag'; }
+
   const ni = cur + 1, nxt = ni < seq.length ? seq[ni] : null;
   document.getElementById('npNxt').textContent = nxt ? nxt.name : '¡ÚLTIMO EJERCICIO!';
   document.getElementById('npSide').textContent = nxt && nxt.side ? nxt.side : '';
+
   document.getElementById('progFill').style.width = (cur / seq.length * 100) + '%';
   document.getElementById('rngFill').className = 'rng-fill ' + ph;
+
   updDots(); updTimer();
 }
 
@@ -123,11 +149,19 @@ function showModalLv(n) {
     document.getElementById(id).className = 'tab-btn' + (i + 1 === n ? ' active lv' + n : '');
   });
   const list = n === 1 ? L1 : L2;
-  document.getElementById('modalContent').innerHTML = list.map((e, i) => `
-    <div class="hw-ex">
-      <div class="hw-num">// EJ ${String(i + 1).padStart(2, '0')}${e.side ? ' · ' + e.side : ''}</div>
-      <div class="hw-name">${e.name}</div>
+  document.getElementById('modalContent').innerHTML = list.map((e, i) => {
+    const iconId = getExerciseIcon(e.name);
+    return `<div class="hw-ex">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px;">
+        ${iconId ? icon(iconId, 36) : ''}
+        <div>
+          <div class="hw-num">// EJ ${String(i + 1).padStart(2, '0')}${e.side ? ' · ' + e.side : ''}</div>
+          <div class="hw-name">${e.name}</div>
+        </div>
+      </div>
       <div class="hw-how">${e.how}</div>
-      <div class="hw-feel">⚡ ${e.feel}</div>
-    </div>`).join('');
+      ${e.tecnica ? `<div style="font-size:11px;color:var(--accent2);margin-top:5px;letter-spacing:1px;">⚡ ${e.tecnica}</div>` : ''}
+      <div class="hw-feel">💪 ${e.feel}</div>
+    </div>`;
+  }).join('');
 }

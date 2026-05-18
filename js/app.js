@@ -1,5 +1,32 @@
 // ── APP INIT ──
 
+// Map exercise names to icon IDs
+const EXERCISE_ICONS = {
+  'flexiones': 'flexiones',
+  'plancha': 'plancha',
+  'sentadilla': 'sentadilla',
+  'zancada': 'zancada',
+  'puente': 'puente',
+  'marcha': 'marcha',
+  'boxing': 'boxing',
+  'rodillas': 'rodillas',
+  'skaters': 'skaters',
+};
+
+function getExerciseIcon(name) {
+  const n = name.toLowerCase();
+  if (n.includes('flexion')) return 'flexiones';
+  if (n.includes('plancha')) return 'plancha';
+  if (n.includes('sentadilla') || n.includes('wall sit')) return 'sentadilla';
+  if (n.includes('zancada')) return 'zancada';
+  if (n.includes('puente')) return 'puente';
+  if (n.includes('marcha')) return 'marcha';
+  if (n.includes('boxing') || n.includes('shadow')) return 'boxing';
+  if (n.includes('rodillas')) return 'rodillas';
+  if (n.includes('skater')) return 'skaters';
+  return null;
+}
+
 document.getElementById('screen-container').innerHTML = `
 
 <!-- THEME PICKER -->
@@ -7,7 +34,6 @@ document.getElementById('screen-container').innerHTML = `
   <div class="tp-title">ELIGE TU ESTILO ✨</div>
   <div class="tp-sub">Podrás cambiarlo cuando quieras</div>
   <div class="theme-cards">
-
     <div class="theme-card harajuku" onclick="selectTheme('harajuku')">
       <div class="tc-name">🌸 Neon Harajuku</div>
       <div class="tc-desc">Energía pop · Rosa chicle · Turquesa eléctrico</div>
@@ -18,7 +44,6 @@ document.getElementById('screen-container').innerHTML = `
         <div class="tc-dot" style="background:#8B5CF6;"></div>
       </div>
     </div>
-
     <div class="theme-card zen" onclick="selectTheme('zen')">
       <div class="tc-name">☁️ Shibuya Zen</div>
       <div class="tc-desc">Minimalismo pastel · Lavanda · Melocotón · Verde matcha</div>
@@ -29,7 +54,6 @@ document.getElementById('screen-container').innerHTML = `
         <div class="tc-dot" style="background:#FFF9F5;border:1px solid #ddd;"></div>
       </div>
     </div>
-
     <div class="theme-card arcade" onclick="selectTheme('arcade')">
       <div class="tc-name">🕹️ Tokyo Arcade</div>
       <div class="tc-desc">Retro-moderno · Rojo coral · Azul anime · Amarillo</div>
@@ -40,7 +64,6 @@ document.getElementById('screen-container').innerHTML = `
         <div class="tc-dot" style="background:#FFFDF0;border:2px solid #333;"></div>
       </div>
     </div>
-
     <div class="theme-card militar" onclick="selectTheme('militar')">
       <div class="tc-name">⚡ MILITAR</div>
       <div class="tc-desc">// MODO OSCURO · ALTA INTENSIDAD · CERO CONCESIONES</div>
@@ -51,7 +74,6 @@ document.getElementById('screen-container').innerHTML = `
         <div class="tc-dot" style="background:#a855d4;"></div>
       </div>
     </div>
-
   </div>
   <button class="btn-apply" onclick="confirmTheme()">APLICAR TEMA</button>
 </div>
@@ -70,9 +92,21 @@ document.getElementById('screen-container').innerHTML = `
     <div class="app-title">TRAINING<span>HEADQUARTERS</span></div>
     <div class="divider"></div>
     <div class="menu-modules">
-      <div class="mod-card cali" onclick="show('cali')"><div class="mod-icon">💪</div><div class="mod-info"><div class="mod-name">CALISTENIA</div><div class="mod-desc">Militar · Sin impacto · 2 niveles</div></div><div class="mod-arr">▶</div></div>
-      <div class="mod-card gym" onclick="show('gym')"><div class="mod-icon">🏋️</div><div class="mod-info"><div class="mod-name">GYM — TREN INFERIOR</div><div class="mod-desc">Registro peso y reps · Protección rodilla</div></div><div class="mod-arr">▶</div></div>
-      <div class="mod-card tri" onclick="show('tri')"><div class="mod-icon">🏊</div><div class="mod-info"><div class="mod-name">TRIATLÓN</div><div class="mod-desc">Natación · Bici · Caminar · Progresión</div></div><div class="mod-arr">▶</div></div>
+      <div class="mod-card cali" onclick="show('cali')">
+        <div class="mod-icon" id="menuIconCali"></div>
+        <div class="mod-info"><div class="mod-name">CALISTENIA</div><div class="mod-desc">Militar · Sin impacto · 2 niveles</div></div>
+        <div class="mod-arr">▶</div>
+      </div>
+      <div class="mod-card gym" onclick="show('gym')">
+        <div class="mod-icon" id="menuIconGym"></div>
+        <div class="mod-info"><div class="mod-name">GYM — TREN INFERIOR</div><div class="mod-desc">Registro peso y reps · Protección rodilla</div></div>
+        <div class="mod-arr">▶</div>
+      </div>
+      <div class="mod-card tri" onclick="show('tri')">
+        <div class="mod-icon" id="menuIconTri"></div>
+        <div class="mod-info"><div class="mod-name">TRIATLÓN</div><div class="mod-desc">Natación · Bici · Caminar · Progresión</div></div>
+        <div class="mod-arr">▶</div>
+      </div>
     </div>
   </div>
 </div>
@@ -101,7 +135,12 @@ document.getElementById('screen-container').innerHTML = `
   <div class="prog-track"><div class="prog-fill" id="progFill" style="width:0%"></div></div>
   <div class="w-main">
     <div class="ph-tag exercise" id="phTag">TRABAJO</div>
-    <div class="ex-nm"><h2 id="exName">...</h2><div class="side-tag" id="sideTg"></div></div>
+    <div class="ex-nm">
+      <div class="ex-icon" id="exIcon"></div>
+      <h2 id="exName">...</h2>
+      <div class="side-tag" id="sideTg"></div>
+      <div class="ex-tecnica" id="exTecnica"></div>
+    </div>
     <div class="ring-row">
       <button class="btn-pause" id="btnPause" onclick="togglePause()"><div class="bp-icon" id="bpIco">⏸</div><div class="bp-lbl" id="bpLbl">PAUSA</div></button>
       <div class="ring-wrap">
@@ -173,9 +212,9 @@ document.getElementById('screen-container').innerHTML = `
   <div class="tri-body">
     <div class="tri-date" id="triDate"></div>
     <div class="disc-sel">
-      <div class="disc-btn sw" onclick="selDisc('sw')" id="db-sw"><div class="disc-ico">🏊</div><div class="disc-nm">NATACIÓN</div></div>
-      <div class="disc-btn bk" onclick="selDisc('bk')" id="db-bk"><div class="disc-ico">🚴</div><div class="disc-nm">BICI</div></div>
-      <div class="disc-btn wk" onclick="selDisc('wk')" id="db-wk"><div class="disc-ico">🚶</div><div class="disc-nm">CAMINAR</div></div>
+      <div class="disc-btn sw" onclick="selDisc('sw')" id="db-sw"><div class="disc-icon" id="iconSw"></div><div class="disc-nm">NATACIÓN</div></div>
+      <div class="disc-btn bk" onclick="selDisc('bk')" id="db-bk"><div class="disc-icon" id="iconBk"></div><div class="disc-nm">BICI</div></div>
+      <div class="disc-btn wk" onclick="selDisc('wk')" id="db-wk"><div class="disc-icon" id="iconWk"></div><div class="disc-nm">CAMINAR</div></div>
     </div>
     <div class="tri-sug" id="triSug"><div class="tri-sug-lbl">// OBJETIVO HOY</div><div class="tri-sug-txt" id="triSugTxt"></div></div>
     <div class="tri-form" id="form-sw">
@@ -222,5 +261,31 @@ document.getElementById('triDate').textContent = '// ' + today();
 // Init gym series
 initGym();
 
-// Init theme — must be last
+// Init theme
 initTheme();
+
+// Init menu icons (after theme is set)
+function initMenuIcons() {
+  document.getElementById('menuIconCali').innerHTML = icon('calistenia', 40);
+  document.getElementById('menuIconGym').innerHTML = icon('gym', 40);
+  document.getElementById('menuIconTri').innerHTML = icon('tri', 40);
+  document.getElementById('iconSw').innerHTML = icon('natacion', 32);
+  document.getElementById('iconBk').innerHTML = icon('bici', 32);
+  document.getElementById('iconWk').innerHTML = icon('caminar', 32);
+}
+
+// Slight delay to ensure theme is applied before icons load
+setTimeout(initMenuIcons, 50);
+
+// Override selectTheme to also update icons
+const _origSelectTheme = selectTheme;
+selectTheme = function(theme) {
+  _origSelectTheme(theme);
+  setTimeout(initMenuIcons, 50);
+};
+
+const _origConfirmTheme = confirmTheme;
+confirmTheme = function() {
+  _origConfirmTheme();
+  setTimeout(initMenuIcons, 50);
+};

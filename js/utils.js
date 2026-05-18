@@ -32,8 +32,6 @@ function showConfirm(id, duration = 3000) {
 }
 
 // ── THEME MANAGEMENT ──
-const THEMES = ['militar', 'harajuku', 'zen', 'arcade'];
-
 function applyTheme(theme) {
   if (theme === 'militar') {
     document.documentElement.removeAttribute('data-theme');
@@ -50,7 +48,6 @@ function getSavedTheme() {
 function initTheme() {
   const saved = getSavedTheme();
   if (!saved) {
-    // Primera vez — mostrar selector
     show('themePicker');
   } else {
     applyTheme(saved);
@@ -58,14 +55,12 @@ function initTheme() {
   }
 }
 
-// Theme picker logic
 let selectedTheme = null;
 
 function selectTheme(theme) {
   selectedTheme = theme;
   document.querySelectorAll('.theme-card').forEach(c => c.classList.remove('selected-theme'));
   document.querySelector('.theme-card.' + theme).classList.add('selected-theme');
-  // Preview en tiempo real
   applyTheme(theme);
 }
 
@@ -82,4 +77,19 @@ function openThemePicker() {
   const card = document.querySelector('.theme-card.' + current);
   if (card) card.classList.add('selected-theme');
   show('themePicker');
+}
+
+// ── ICON HELPER ──
+function getIconSuffix() {
+  const theme = getSavedTheme() || 'militar';
+  if (theme === 'militar') return '-militar';
+  if (theme === 'zen') return '-zen';
+  if (theme === 'arcade') return '-arcade';
+  return ''; // harajuku = sin sufijo
+}
+
+function icon(id, size = 40) {
+  const suffix = getIconSuffix();
+  // Si no existe el icono con sufijo, usa el base
+  return `<svg width="${size}" height="${size}" viewBox="0 0 48 48"><use href="#icon-${id}${suffix}"/></svg>`;
 }

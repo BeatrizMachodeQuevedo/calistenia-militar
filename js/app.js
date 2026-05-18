@@ -1,12 +1,71 @@
 // ── APP INIT ──
 
-// Render all screens into the DOM
 document.getElementById('screen-container').innerHTML = `
 
+<!-- THEME PICKER -->
+<div id="themePicker" class="screen active">
+  <div class="tp-title">ELIGE TU ESTILO ✨</div>
+  <div class="tp-sub">Podrás cambiarlo cuando quieras</div>
+  <div class="theme-cards">
+
+    <div class="theme-card harajuku" onclick="selectTheme('harajuku')">
+      <div class="tc-name">🌸 Neon Harajuku</div>
+      <div class="tc-desc">Energía pop · Rosa chicle · Turquesa eléctrico</div>
+      <div class="tc-dots">
+        <div class="tc-dot" style="background:#FF4B91;"></div>
+        <div class="tc-dot" style="background:#00D2C4;"></div>
+        <div class="tc-dot" style="background:#FFCD38;"></div>
+        <div class="tc-dot" style="background:#8B5CF6;"></div>
+      </div>
+    </div>
+
+    <div class="theme-card zen" onclick="selectTheme('zen')">
+      <div class="tc-name">☁️ Shibuya Zen</div>
+      <div class="tc-desc">Minimalismo pastel · Lavanda · Melocotón · Verde matcha</div>
+      <div class="tc-dots">
+        <div class="tc-dot" style="background:#8B5CF6;"></div>
+        <div class="tc-dot" style="background:#FF8A65;"></div>
+        <div class="tc-dot" style="background:#4ADE80;"></div>
+        <div class="tc-dot" style="background:#FFF9F5;border:1px solid #ddd;"></div>
+      </div>
+    </div>
+
+    <div class="theme-card arcade" onclick="selectTheme('arcade')">
+      <div class="tc-name">🕹️ Tokyo Arcade</div>
+      <div class="tc-desc">Retro-moderno · Rojo coral · Azul anime · Amarillo</div>
+      <div class="tc-dots">
+        <div class="tc-dot" style="background:#FF5A5F;"></div>
+        <div class="tc-dot" style="background:#3B82F6;"></div>
+        <div class="tc-dot" style="background:#F59E0B;"></div>
+        <div class="tc-dot" style="background:#FFFDF0;border:2px solid #333;"></div>
+      </div>
+    </div>
+
+    <div class="theme-card militar" onclick="selectTheme('militar')">
+      <div class="tc-name">⚡ MILITAR</div>
+      <div class="tc-desc">// MODO OSCURO · ALTA INTENSIDAD · CERO CONCESIONES</div>
+      <div class="tc-dots">
+        <div class="tc-dot" style="background:#7a9445;"></div>
+        <div class="tc-dot" style="background:#f5b942;"></div>
+        <div class="tc-dot" style="background:#3aaecf;"></div>
+        <div class="tc-dot" style="background:#a855d4;"></div>
+      </div>
+    </div>
+
+  </div>
+  <button class="btn-apply" onclick="confirmTheme()">APLICAR TEMA</button>
+</div>
+
 <!-- MENU -->
-<div id="menu" class="screen active">
+<div id="menu" class="screen">
   <div class="menu-grid"></div>
-  <div class="menu-top"><span class="menu-tag">▶ TRAINING HQ</span><span class="menu-tag" id="menuDate"></span></div>
+  <div class="menu-top">
+    <span class="menu-tag">▶ TRAINING HQ</span>
+    <div style="display:flex;align-items:center;gap:8px;">
+      <span class="menu-tag" id="menuDate"></span>
+      <button class="btn-settings" onclick="openThemePicker()" title="Cambiar tema">🎨</button>
+    </div>
+  </div>
   <div class="menu-body">
     <div class="app-title">TRAINING<span>HEADQUARTERS</span></div>
     <div class="divider"></div>
@@ -162,3 +221,6 @@ document.getElementById('triDate').textContent = '// ' + today();
 
 // Init gym series
 initGym();
+
+// Init theme — must be last
+initTheme();

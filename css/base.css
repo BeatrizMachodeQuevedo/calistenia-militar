@@ -1,0 +1,54 @@
+/* ── BASE & VARIABLES ── */
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;user-select:none;}
+:root{
+  --bg:#0a0a0a;--bg2:#131313;--bg3:#1c1c1c;--bg4:#242424;
+  --olive:#3d4f22;--olive2:#5a7032;--olive3:#7a9445;
+  --amber:#c17f24;--amber2:#e09c2e;--amber3:#f5b942;
+  --rest:#1a4a5c;--rest2:#2a7a9c;--rest3:#3aaecf;
+  --gym:#4a1a6b;--gym2:#7a2aab;--gym3:#a855d4;
+  --tri:#0a4a2a;--tri2:#1a7a4a;--tri3:#2ab870;
+  --text:#ccc4b0;--text2:#8a8070;--text3:#4a4438;
+  --l1:#2a6b3c;--l1b:#3a9b55;--l2:#7a4a0a;--l2b:#c07820;
+  --skipl:#ff6030;--skipb:#c04010;
+}
+html,body{height:100%;overflow:hidden;background:var(--bg);font-family:'Barlow Condensed',sans-serif;color:var(--text);}
+
+/* SCREENS */
+.screen{display:none;flex-direction:column;height:100vh;overflow:hidden;}
+.screen.active{display:flex;}
+
+/* SHARED COMPONENTS */
+.topbar{display:flex;justify-content:space-between;align-items:center;padding:10px 16px;border-bottom:1px solid var(--bg3);flex-shrink:0;}
+.btn-back{font-family:'Share Tech Mono',monospace;font-size:10px;letter-spacing:2px;color:var(--text2);background:none;border:1px solid var(--bg3);padding:5px 10px;cursor:pointer;}
+.btn-back:active{color:var(--text);}
+.btn-sm{font-family:'Share Tech Mono',monospace;font-size:10px;letter-spacing:2px;color:var(--text3);background:none;border:1px solid var(--bg3);padding:5px 10px;cursor:pointer;}
+.btn-sm:active{color:var(--text2);}
+.scr-title{font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:4px;}
+.scr-title.cali{color:var(--olive3);}
+.scr-title.gym{color:var(--gym3);}
+.scr-title.tri{color:var(--tri3);}
+.divider{width:60px;height:2px;background:linear-gradient(90deg,transparent,var(--amber),transparent);margin:18px 0;}
+
+/* COUNTDOWN */
+.cd-ov{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.92);z-index:400;flex-direction:column;align-items:center;justify-content:center;gap:12px;}
+.cd-ov.on{display:flex;}
+.cd-n{font-family:'Bebas Neue',sans-serif;font-size:150px;color:var(--amber3);line-height:1;animation:cdpop 1s ease-out;}
+@keyframes cdpop{0%{transform:scale(1.5);opacity:0}40%{opacity:1}100%{transform:scale(1);opacity:1}}
+.cd-l{font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:6px;color:var(--text2);}
+
+/* MODAL */
+.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.9);z-index:500;flex-direction:column;}
+.modal.on{display:flex;}
+.modal-hdr{display:flex;justify-content:space-between;align-items:center;padding:14px 20px;border-bottom:1px solid var(--olive);background:var(--bg2);}
+.modal-ttl{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:4px;color:var(--amber2);}
+.btn-x{font-size:20px;color:var(--text2);background:none;border:none;cursor:pointer;padding:4px 8px;}
+.modal-body{flex:1;overflow-y:auto;padding:20px;-webkit-overflow-scrolling:touch;}
+.modal-tabs{display:flex;gap:8px;margin-bottom:18px;}
+.tab-btn{flex:1;font-family:'Bebas Neue',sans-serif;font-size:15px;letter-spacing:2px;padding:9px;border:1px solid var(--bg3);background:var(--bg3);color:var(--text2);cursor:pointer;}
+.tab-btn.active.lv1{border-color:var(--l1b);color:var(--l1b);background:rgba(42,107,60,0.15);}
+.tab-btn.active.lv2{border-color:var(--l2b);color:var(--l2b);background:rgba(122,74,10,0.15);}
+.hw-ex{margin-bottom:20px;border-left:2px solid var(--olive);padding-left:14px;}
+.hw-num{font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:2px;color:var(--amber);margin-bottom:4px;}
+.hw-name{font-family:'Bebas Neue',sans-serif;font-size:19px;letter-spacing:2px;color:var(--text);margin-bottom:5px;}
+.hw-how{font-size:13px;line-height:1.7;color:var(--text2);font-weight:300;}
+.hw-feel{margin-top:5px;font-size:11px;color:var(--olive3);letter-spacing:1px;}

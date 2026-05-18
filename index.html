@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#0a0a0a">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<title>TRAINING HQ</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Share+Tech+Mono&family=Barlow+Condensed:wght@300;400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/menu.css">
+<link rel="stylesheet" href="css/calistenia.css">
+<link rel="stylesheet" href="css/gym.css">
+<link rel="stylesheet" href="css/triatlon.css">
+</head>
+<body>
+
+<!-- COUNTDOWN -->
+<div class="cd-ov" id="cdOv"><div class="cd-n" id="cdN">3</div><div class="cd-l">PREPÁRATE</div></div>
+
+<!-- MODAL EJERCICIOS -->
+<div class="modal" id="exModal">
+  <div class="modal-hdr"><span class="modal-ttl">EJERCICIOS</span><button class="btn-x" onclick="closeModal()">✕</button></div>
+  <div class="modal-body">
+    <div class="modal-tabs">
+      <button class="tab-btn active lv1" id="tab1" onclick="showModalLv(1)">NIVEL 1</button>
+      <button class="tab-btn lv2" id="tab2" onclick="showModalLv(2)">NIVEL 2</button>
+    </div>
+    <div id="modalContent"></div>
+  </div>
+</div>
+
+<!-- SCREENS -->
+<div id="screen-container">
+  <!-- Se cargan dinámicamente -->
+</div>
+
+<script src="js/utils.js"></script>
+<script src="js/data.js"></script>
+<script src="js/calistenia.js"></script>
+<script src="js/gym.js"></script>
+<script src="js/triatlon.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
